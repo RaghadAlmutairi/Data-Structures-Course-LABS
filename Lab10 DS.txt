@@ -1,0 +1,444 @@
+//lab10
+
+#include <stdio.h>
+#include <iostream>
+using namespace std;
+
+
+class BSTnode {  
+    
+    protected: 
+	int data;
+	BSTnode* left;
+	BSTnode* right;
+
+	public:
+    BSTnode() {
+        left = right = NULL;
+    }
+    BSTnode(int newData) { 
+        data=newData;
+        right=left=NULL;
+    }
+    BSTnode(int newData, BSTnode* let, BSTnode* rit) {  
+	    this->data = newData;
+        this->left = let;  
+        this->right = rit;
+    }
+    
+    
+    int getData(){
+        return data;
+    }
+    
+    BSTnode* getLeft(){
+        return left;
+    }
+    
+    BSTnode* getRight(){
+        return right;
+    }
+    
+    
+    void setData(int data){
+        this->data=data;
+    }
+    
+    
+    void setLeft(BSTnode*left){
+        this->left=left;
+    }
+    
+    
+    void setRight(BSTnode*right){
+        this->right=right;
+    }
+};
+
+
+class intBST {
+    
+    protected:
+    BSTnode* root;
+    
+    public:
+    
+    intBST() {
+    root=NULL;
+    }
+    
+    bool isEmpty(){
+        if(root == NULL)
+		    return true;
+		  else 
+		    return false;
+    }
+    
+    
+    bool recursiveSearch(int value){
+        recursiveSearch(root, value);
+    }
+    
+    bool recursiveSearch(BSTnode* p, int value) {
+        if(p==NULL){
+            return false;
+        }else{
+            if (value == p->getData()){
+                return true;
+            }else if (value < p->getData()){
+                return recursiveSearch(p->getLeft(),value);
+            }else{
+                return recursiveSearch(p->getRight(),value);
+            }
+        }
+    }
+    
+    BSTnode*find(int number){
+        find(root,number);
+    }
+    
+	BSTnode* find(BSTnode* p,int value){
+	while(p!=NULL){
+		if(p->getData()==value){
+			return p;
+		}else if(p->getData() >value){
+			p=p->getLeft();
+		}else{
+			p=p->getRight();
+		}
+	}
+	return NULL;
+    }
+    
+    
+    void insert(int data) {  
+        root = insert(root, data);
+    }
+    
+    BSTnode* insert(BSTnode* p, int data) {  
+        if (p == NULL) {
+            p = new BSTnode(data);
+        }else{
+            if (data < p->getData()) {
+                p->setLeft(insert(p->getLeft(),data))  ;
+            
+            }else {
+                p->setRight(insert(p->getRight(),data)) ;
+            }
+        }
+        return p;
+    }
+    
+    void preorder() {
+        preorder(root);
+    }
+    void preorder(BSTnode* p) {
+        if (p != NULL) {
+            cout<< p->getData()<< ", ";
+            preorder(p->getLeft());
+            preorder(p->getRight());
+        }
+    }
+    
+    void postorder() {
+        postorder(root);
+    }
+    void postorder(BSTnode* p) {
+        if (p != NULL) {
+            postorder(p->getLeft());
+            postorder(p->getRight());
+            cout<< p->getData()<< ", ";
+        }
+    }
+    
+    void asendingorder() { 
+        asendingorder (root);
+    }
+    void asendingorder (BSTnode *p) {
+        if (p != NULL) {
+            asendingorder (p->getLeft());
+            cout<<p->getData()<< ", ";
+            asendingorder (p->getRight());
+        }
+    }
+   
+    void desendingorder() { 
+        desendingorder (root);
+    }
+    void desendingorder (BSTnode *p) {
+        if (p != NULL) {
+            desendingorder (p->getRight());
+            cout<<p->getData()<< ", ";
+            desendingorder (p->getLeft());
+        }
+    }
+    
+    BSTnode* findMin(BSTnode* t) {  
+        BSTnode* temp = t;  
+  
+        
+        while (temp->getLeft() != NULL)  
+        {  
+            temp = temp->getLeft();  
+        }  
+        return temp;  
+     }  
+    
+    
+
+    
+    
+    void modifiyallNodes(int value) {
+        modifiyallNodes(root, value);
+    }
+    void modifiyallNodes(BSTnode* p, int value) {
+        if (p != NULL) {
+            p->setData(p->getData() + value);
+            modifiyallNodes(p->getLeft(), value);
+            modifiyallNodes(p->getRight(), value);
+        }
+    }
+   
+   
+    void greaterThan(int n) {
+        greaterThan(root, n);
+    }
+    void greaterThan(BSTnode* p, int n) {
+        if (p != NULL) {
+            greaterThan(p->getLeft(), n);
+            if (p->getData() >= n) {
+                cout<<p->getData()<< ", "<<endl;
+            }
+            greaterThan(p->getRight(), n);
+        }
+    }
+    
+    
+    int nonLeaves() { 
+        return nonLeaves(root);
+    }
+    int nonLeaves(BSTnode* p) {
+        if (p == NULL) {
+            return 0;
+        } 
+        if (p->getLeft() == NULL && p->getRight() == NULL){
+            return 0 ;
+        } else {
+            return 1+ nonLeaves(p->getLeft()) + nonLeaves(p->getRight());
+        }
+    }
+    
+    bool isFullBST() {
+        return isFullBST(root);
+    }
+            
+    bool isFullBST(BSTnode* p){
+        
+        if (p == NULL)
+            return true;
+    
+        if (p->getLeft() == NULL && p->getRight() == NULL) 
+            return true;
+    
+        
+        if ((p->getLeft()) && (p->getRight()))
+            return (isFullBST(p->getLeft()) && isFullBST(p->getRight()));
+    
+        
+        return false;
+    }
+    
+    int count7() {
+        count7(root);
+    }
+    int count7(BSTnode *p){
+        int value=0;
+        if(p==NULL){
+        
+            return 0;
+        }
+        else{
+        
+            if(p->getData()%7==0){
+                value++;
+                return value+count7(p->getLeft())+count7(p->getRight());
+            }
+            else{
+                return value+count7(p->getLeft())+count7(p->getRight());
+        
+            }
+    
+        }
+    }
+    
+    int SumChildren(int value) {
+        SumChildren(root,value);
+    }
+    int SumChildren(BSTnode* p,int value){
+        int sum=0;
+        if(p==NULL){
+            return 0;
+        }
+        else{  
+            if(p->getData()==value){
+                if (p->getLeft()!=NULL)
+                    sum += p->getLeft()->getData();
+                
+                if (p->getRight()!=NULL)
+                    sum += p->getRight()->getData();
+            }else if(value<p->getData()){
+                return SumChildren(p->getLeft(), value);
+            }else if(value>p->getData()){
+                return SumChildren(p->getRight(), value);
+            }
+            return sum;
+        
+        }
+    }
+};
+
+  
+int main(){
+    
+    int choice;
+    int value;
+    bool flag= true;
+    intBST *BST = new intBST();
+    
+    while(flag){
+    cout<<"|---------------------------------------------------------------|"<<endl;
+    cout<<"|------------  \t     Binary Search Tree Menu  \t    ------------|"<<endl;
+    cout<<"|---------------------------------------------------------------|"<<endl;
+    cout<<"|\t1. Insert an item into the tree   \t \t \t|"<<endl;
+    cout<<"|\t2. Insert all items into the tree  \t  \t  \t|"<<endl;
+    cout<<"|\t3. Delete an item from the tree   \t \t \t|"<<endl;
+    cout<<"|\t4. Print all nodes in ascending order  \t \t \t|"<<endl;
+    cout<<"|\t5. Print all nodes in desending order  \t \t \t|"<<endl;
+    cout<<"|\t6. Print number of inner nodes of tree \t \t \t|"<<endl;
+    cout<<"|\t7. Print number of nodes divisable by 7  \t \t|"<<endl;
+    cout<<"|\t8. Print sum of children of some nodes \t \t \t|"<<endl;
+    cout<<"|\t9. Determine whether given BST is full BST or not \t|"<<endl;
+    cout<<"|\t10. Quit \t\t\t\t \t \t|"<<endl;
+    cout<<"|---------------------------------------------------------------|"<<endl;
+    cout<<"\n> Please enter your choice: ";
+    cin>>choice;
+    
+    switch(choice){
+        case 1: 
+                cout<< "> Please enter value to Insert it to the tree: ";
+		        cin>>value;
+		        if(BST->recursiveSearch(value))
+		            cout<< "> "<<value<<"\t already exists in the tree duplicates are not allowed. \n";
+		        else
+		             BST->insert(value);
+	            break;
+	            
+        case 2: //Insert all items into the tree
+                cout<< "> Enter value to insert ( the input ends if it is 0): ";
+		        cin>> value;
+            	while (value != 0) {
+            	    if(BST->recursiveSearch(value))
+		                cout<< "> "<<value<<"\t already exists in the tree duplicates are not allowed. \n";
+		            else
+    	                BST->insert(value);
+	               
+	                cout<< "> Enter value to insert ( the input ends if it is 0): ";
+		            cin>> value;
+	             }
+	            break;
+	            
+        case 3:
+	           cout <<"not availbale ";
+	            break;
+        case 4:
+                if (BST->isEmpty()) {
+        	    	cout<< "> sorry the Tree is empty \n";
+        	    	cout<< endl;
+        	    }
+        	    else {
+        	        cout<< "> nodes in an ascending order: \n";
+        	    	BST->asendingorder();
+            	}
+	             cout << endl;
+	             break;
+	             
+        case 5:
+                if (BST->isEmpty()) {
+                	cout<< "> sorry the Tree is empty \n";
+                	cout<< endl;
+                }
+                else {
+                	 cout<< "\n> nodes in an desending order: \n";
+                	 BST->desendingorder();
+                }
+        	    cout<< endl;
+        	    break;
+        	    
+        case 6:
+                if (BST->isEmpty()) {
+                	cout<< "> sorry the Tree is empty \n";
+                	cout<< endl;
+                }
+                else {
+                	 cout<< "\n> number of inner nodes: \n";
+                	 cout<<BST->nonLeaves();
+                }
+        	    cout << endl;
+        	    break;
+        case 7:
+            if (BST->isEmpty()) {
+                    	cout<< "> sorry the Tree is empty \n";
+                    	cout<< endl;
+                }
+                else {
+                    	 cout<< "\n> number of nodes divisible by 7: \n";
+                    	 cout<<BST->count7();
+                }
+            cout << endl;
+                break;
+        case 8:
+            cout<<"> please enter the node you want to get the sum of its children\n";
+            cin>>value;
+            
+            if (BST->isEmpty()) {
+                    	cout<< "> sorry the Tree is empty \n";
+                    	cout<< endl;
+                }else if(!(BST->find(value))){
+                    cout<<"the node dose not exists"<<endl;
+                }
+                else {
+                    	 cout<< "\n> sum of children: \n";
+                    	 int sum=BST->SumChildren(value);
+                    	 if(sum==0){
+                    	     cout<<"the node have no children"<<endl;
+                    	 }else{
+                    	     cout<<BST->SumChildren(value);
+                    	 }
+                    	 
+                }
+            cout << endl;
+                break;
+                break;
+        case 9:
+                 if (BST->isEmpty()) {
+                	cout<< "> sorry the Tree is empty \n";
+                	cout<< endl;
+                }
+                else {
+                    if(BST->isFullBST())
+                	    cout<< "\n> The given BST is a Full BST.\n";
+                	else
+                	    cout<< "\n> The given BST is not a Full BST.\n";
+                }
+        	    cout << endl;
+                break;
+        case 10: 
+            flag=false;
+        break;
+        default: cout<<"\n> Wrong choice !! \n";
+        
+    }
+}
+    
+    return 0;
+}

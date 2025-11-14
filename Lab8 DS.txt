@@ -1,0 +1,181 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+
+//lab 8
+#include<iostream>
+#include<cstring>
+#include<stack>
+using namespace std;
+
+struct Stack
+{
+    int top;
+    unsigned capacity;
+    int* array;
+};
+
+int getWeight(char ch) {
+    switch (ch) {
+        case '/':
+        case '*':
+        return 2;
+        
+        case '+':
+        case '-':
+        return 1;
+        
+        default :
+        return 0;
+    }
+}
+
+void infix2postfix(char infix[], char postfix[], int size) {
+    stack<char> s;
+    int weight;
+    
+    int i = 0;
+    int k = 0;
+    char ch;
+    
+    while (i < size) {
+        ch = infix[i];
+        if (ch == '(') {
+            s.push(ch);
+            i++;
+            continue;
+        }
+        
+        if (ch == ')') {
+            while (!s.empty() && s.top() != '(') {
+                postfix[k++] = s.top();
+                s.pop();
+            }
+            
+            if (!s.empty()) {
+                s.pop();
+            }
+            i++;
+            continue;
+        }
+        
+        weight = getWeight(ch);
+        if (weight == 0) {
+            postfix[k++] = ch;
+        }else {
+            if (s.empty()) {
+                s.push(ch);
+            }else {
+                while (!s.empty() && s.top() != '(' && weight <= getWeight(s.top())) {
+                    postfix[k++] = s.top();
+                    s.pop();
+                }
+                s.push(ch);
+            }
+        }
+        i++;
+    }
+    
+    while (!s.empty()) {
+        postfix[k++] = s.top();
+        s.pop();
+    }
+    
+    postfix[k] = 0; 
+}
+// Stack Operations
+struct Stack* createStack( unsigned capacity )
+{
+    struct Stack* stack = (struct Stack*) malloc(sizeof(struct Stack));
+ 
+    if (!stack) return NULL;
+ 
+    stack->top = -1;
+    stack->capacity = capacity;
+    stack->array = (int*) malloc(stack->capacity * sizeof(int));
+ 
+    if (!stack->array) return NULL;
+ 
+    return stack;
+}
+ 
+int isEmpty(struct Stack* stack)
+{
+    return stack->top == -1 ;
+}
+ 
+char peek(struct Stack* stack)
+{
+    return stack->array[stack->top];
+}
+ 
+char pop(struct Stack* stack)
+{
+    if (!isEmpty(stack))
+        return stack->array[stack->top--] ;
+    return '$';
+}
+ 
+void push(struct Stack* stack, char op)
+{
+    stack->array[++stack->top] = op;
+}
+
+int evaluatePostfix(char* exp)
+{
+    // Create a stack of capacity equal to expression size
+    struct Stack* stack = createStack(strlen(exp));//Create a stack in the same size of array of char
+    int i;
+ 
+    // See if stack was created successfully
+    if (!stack) return -1;//chack if stack was created  
+ 
+    // Scan all characters one by one
+    for (i = 0; exp[i]; ++i)//Scan all characters
+    {
+        // If the scanned character is an operand (number here),
+        // push it to the stack.
+        if (isdigit(exp[i]))
+            push(stack, exp[i] - '0');//if is it number
+ 
+        // If the scanned character is an operator, pop two
+        // elements from stack apply the operator
+        else
+        {
+            int val1 = pop(stack);
+            int val2 = pop(stack);
+            switch (exp[i])
+            {
+            case '+': push(stack, val2 + val1); break;//push the results 
+            case '-': push(stack, val2 - val1); break;//push the results
+            case '*': push(stack, val2 * val1); break;//push the results
+            case '/': push(stack, val2/val1); break;//push the results
+            }
+        }
+    }
+    return pop(stack);//return the results in the stack
+}
+
+int main() {
+    char infix[50];
+    cout<<">>>>>>> Convert Infix to Postfix <<<<<<<";
+    cout<<"\n>> Enter the Infix Expression you wish to convert type on one line ";
+    cout<<"\nExample : 7 * 10 + 5 + 4 * 3 + 25 * 2";
+    cout<<"\nPlease enter Infix Expression:";
+    cin>>infix;
+    
+    int size = strlen(infix);
+    char postfix[size];
+    infix2postfix(infix,postfix,size);
+    cout<<"\nInfix Expression : "<<infix;
+    cout<<"\nPostfix Expression : "<<postfix;
+    
+    cout<<endl;
+    cout<<"postfix evaluation: "<< evaluatePostfix(postfix);
+    return 0;
+}

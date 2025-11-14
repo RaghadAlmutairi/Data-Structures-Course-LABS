@@ -1,0 +1,224 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+//lab4
+
+#include <iostream>
+
+using namespace std;
+
+struct node{
+    int data;
+    node* next;
+};
+class LinkedList{
+    node *head;
+public: 
+
+    void InserteList(){
+        int n;
+        cout << "How many values do you want to insert: ";
+        cin >> n;
+        node* temp = nullptr;
+        for(int i=0; i<n; ++i)
+        {
+            head = new node;
+            cout << "Value " << i + 1 << ": ";
+            cin >> head->data;
+            head->next = temp;
+            temp = head;
+            cout << head->data <<" was successfully inserted into the list.\n";
+        }
+    };
+    
+    int countNodes() {
+        node* helpPtr = head;
+        int count = 0;
+        while (helpPtr != NULL) {
+            count++;
+            helpPtr = helpPtr->next;
+        }
+        return count;
+    };
+    
+    void printNodes() {
+        node* helpPtr = head;
+        while (helpPtr != NULL)
+        {
+            cout << helpPtr->data << ", ";
+            helpPtr = helpPtr->next;
+        }
+    };    
+    
+    void printEvenNodes() {
+        node* helpPtr = head;
+        while (helpPtr != NULL)
+        {
+            if (helpPtr->data % 2 == 0) {
+            cout << helpPtr->data << ", ";
+            } helpPtr = helpPtr->next;
+        }
+    };
+    bool search(int data)
+    {
+        node* helpPtr = head;
+        while (helpPtr != NULL)
+        {
+            if (helpPtr->data == data)
+            {
+                return true;
+            }
+            helpPtr = helpPtr->next;
+        }
+        return false;
+    };
+    
+    bool isEmpty()
+    {
+        if(head == NULL)
+            return true;
+        else
+            return false;
+    }
+
+
+    void swapFirstLast() {
+        if (countNodes() <= 1) {
+            cout << "Error : cannot swap(the list has less than two nodes)\n";
+        }
+
+        node *temp = head;
+        int v = head->data;
+        while(temp!=NULL){
+            if(temp->next == NULL){
+                head->data = temp->data ;
+                temp->data = v;
+            }
+            temp = temp->next;
+        }
+    };
+    
+    void countEvenOddNodes (){
+        
+        int evenNodes = 0;
+        int oddNodes = 0;
+        node *temp=head;
+        while(temp!=NULL){
+            if(temp->data %2 == 0)
+                evenNodes++;
+            else
+                oddNodes++;
+            temp = temp->next;
+        }
+        cout<<"\nNumber of even nodes in the list is " <<  evenNodes;
+        cout<<"\nNumber of odd nodes in the list is "<<oddNodes;
+    };    
+    
+    void addNodeAfter (int data){
+        
+        if(search(data)==true){
+            node *temp=head;
+            while(temp!=NULL){
+                if(temp->data == data){
+                    node *newNode = new node();
+                    newNode->data = data*2;
+                    newNode->next = temp->next;
+                    temp->next = newNode;
+                }
+                temp = temp->next;
+            }
+        }else{
+             cout << "Error: There is no node in the List with " << data << endl;
+        }
+    };
+    
+    void deleteNodeAfter(int data){
+        
+        if(search(data)==true){
+            node *temp=head;
+            while(temp!=NULL){
+                if(temp->data == data && temp->next != NULL){
+                    temp->next = temp->next->next;
+                }
+                temp = temp->next;
+            }
+        }else{
+             cout << "Error: There is no node in the List with " << data << "\n";
+             return;
+        }
+        cout<<"Node have been deleted successfully!\n";
+    };
+    
+
+};
+
+
+int main()
+{
+    LinkedList list ;
+    list.InserteList();
+    cout << "\nPrinting All Nodes:\n";
+    
+    if (list.isEmpty()) {
+        cout << "The list is empty";
+    }
+    else
+    {
+        list.printNodes() ;
+        cout << endl;
+    }
+
+
+
+    cout << "\n\ncountNodes()"
+            "\nNumbers of nodes in the linked list is: "<<list.countNodes()<<"\n\n";
+
+    cout << "\nprintEvenNodes()\nPrinting Even Nodes.\n";
+    list.printEvenNodes();
+    cout << "\n\nTask 1: swapFirstLast()\n";
+    if (list.isEmpty()) {
+        cout << "Error : cannot swap(the list has less than two nodes)\n";
+    }else{
+        list.swapFirstLast();
+        list.printNodes();
+        
+    }
+    
+    cout << "\n\nTask 2: countEvenOddNodes()\n";
+    if (list.isEmpty()) {
+            cout << "Error : The list is empty\n";
+            cout<<"Number of even nodes in the list is 0\n" ;
+            cout<<"Number of odd nodes in the list is 0\n";
+        }else
+            list.countEvenOddNodes();
+
+    int num;
+    cout << "\n\nTask 3: addNodeAfter()\n";
+    if (list.isEmpty()) {
+            cout << "Error : cannot add node after(the list is empty)\n";
+        }else{
+            cout<<"Enter the node data after which you want to add a new node: ";
+            
+            cin >> num;
+            list.addNodeAfter(num);
+            cout << "\n";
+            list.printNodes();
+        }
+    cout << "\n\nTask 4: deleteNodeAfter()\n";
+    if (list.isEmpty()) {
+            cout << "Error : cannot delete node after(the list is empty)\n";
+        }else{
+            cout<<"Enter the node data after which you want to delete a node: ";
+        
+            cin >> num;
+            list.deleteNodeAfter(num);
+            list.printNodes();
+        }
+
+    return 0;
+}

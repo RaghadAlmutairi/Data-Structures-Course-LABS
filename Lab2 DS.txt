@@ -1,0 +1,83 @@
+/******************************************************************************
+
+lab 2
+*******************************************************************************/
+#include <iostream>
+#include <time.h>
+#include <algorithm>
+
+using namespace std;
+
+int linearSearch(int array[], int size, int key) {
+    for(int i = 0; i < size; i++) {
+        if(key == array[i])
+            return i; //If found, return index of that element
+    }
+        return -1; //if not found, return -1
+}
+
+
+void fillArray(int array[], int size) {
+    for (int i = 0; i < size; i++) {
+         array[i] = (rand()%size);
+     }
+}
+
+
+
+int binarySearch(int array [],int size, int key){
+    int low = 0, high = size-1, mid = 0;
+     while (low <= high) {
+        mid = (low + high)/2;
+        if(key == array[mid])
+            return mid;
+        else if (key < array[mid]) // change
+            high = mid - 1;
+        else // change low
+            low = mid + 1;
+    }
+        return -1; // if key not found above
+}
+
+
+
+
+int main()
+{
+   const int size =100000;
+   int test[size];
+   int key;
+   fillArray(test, size);
+  
+   cout<<"\nEnter key to search: ";
+   cin>>key;
+   sort(test, test+size);
+   
+   clock_t start1 = clock();
+   int linear=linearSearch(test,size, key);
+   clock_t stop1 = clock();
+   double totalTime1 = (double(stop1)-double(start1))/CLOCKS_PER_SEC;
+   
+   clock_t start2 = clock();
+   int binary=binarySearch(test,size, key);
+   clock_t stop2 = clock();
+   double totalTime2 = (double(stop2)-double(start2))/CLOCKS_PER_SEC;
+   
+     if(linear==-1){
+        cout<<"not found "<<"\n";
+    }else{
+        cout<<" found in "<<linear<<"\n";
+        cout<<"The total time: "<<totalTime1<<"\n";
+    }
+    
+    if(binary==-1){
+        cout<<"not found "<<"\n";
+    }else{
+        cout<<" found in "<<binary<<"\n";
+        cout<<"The total time: "<<totalTime2<<"\n";
+    }
+  
+
+
+    return 0;
+}
